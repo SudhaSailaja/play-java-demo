@@ -1,10 +1,12 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import controllers.HelloAbstract.HelloMethods;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,14 +14,20 @@ import java.util.Map;
 @Singleton
 public class HelloController extends Controller {
     Map< Integer,String > map = new HashMap<>();
+
+    private HelloMethods message;
+    @Inject
+    public HelloController(HelloMethods message){
+        this.message = message;
+    }
     public Result doSomething() {
-        String message = "Hello Sym. This is your controller!!";
-        return ok(message);
+        return ok(message.doResultMessage());
     }
+
     public Result helloUser(String name) {
-        String message = "Hello "+name;
-        return ok(message);
+        return ok(message.doResultMessage()+name);
     }
+
     public Result helloUserWithDetails() {
         JsonNode requestJson = request().body().asJson();
         String firstName = null;
